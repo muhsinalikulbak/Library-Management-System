@@ -48,9 +48,12 @@ public class BookManager
 
     public void DeleteBook(string book)
     {
-        if (_books.ContainsKey(book))
+        string editedName = string.Join(" ", book.ToLower().Split(' ', StringSplitOptions.RemoveEmptyEntries));
+        
+        if (_books.ContainsKey(editedName))
         {
-            _books.Remove(book);
+            _books.Remove(editedName);
+            _count--;
             Console.WriteLine("Book deleted");
         }
         else
@@ -61,7 +64,13 @@ public class BookManager
 
     public void SearchBook(string book)
     {   
-        if (_books.ContainsKey(book.ToLower()))
-            PrintBook(_books[book.ToLower()]);
+        string editedName = string.Join(" ", book.ToLower().Split(' ', StringSplitOptions.RemoveEmptyEntries));
+        
+        if (_books.ContainsKey(editedName))
+            PrintBook(_books[editedName]);
+        else
+        {
+            Console.WriteLine("Book not found");
+        }
     }
 }

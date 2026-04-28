@@ -4,8 +4,8 @@ public class Book
 {
    public Book(string name, string author)
    {
-      _name   = name.ToLower();
-      _author = author.ToLower();
+        _name = string.Join(" ", name.ToLower().Split(' ', StringSplitOptions.RemoveEmptyEntries));
+        _author = author.ToLower();
    }
    
    private string _name = "";
