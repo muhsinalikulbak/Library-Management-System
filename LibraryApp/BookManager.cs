@@ -4,73 +4,40 @@ namespace LibraryApp;
 
 public class BookManager
 {
-    private  Dictionary<string, Book> _books = new Dictionary<string, Book>();
-    private int _count = 0;
-    public void PrintBook(Book book)
+    IBookRepository _bookRepository;
+
+    public BookManager(IBookRepository bookRepository)
     {
-        Console.WriteLine("Id : " + book.Id);
-        Console.WriteLine("Name : " + book.Name);
-        Console.WriteLine("Author : " + book.Author);
+        _bookRepository = bookRepository;
     }
 
     public void AddBook(Book book)
     {
-        if (string.IsNullOrWhiteSpace(book.Name) || string.IsNullOrWhiteSpace(book.Author))
+        if (_bookRepository.GetById(book.Id) == null)
         {
-            Console.WriteLine("Book information is empty");
-            return;
+            _bookRepository.Add(book);
+            Console.WriteLine("Book added");
         }
-        
-        if (_books.ContainsKey(book.Name))
+        else
         {
-            Console.WriteLine("Book already exists");
-            return;
+            Console.WriteLine("The book could not be added");
         }
-        
-        book.Id = _count++;
-        _books[book.Name] = book;
-        Console.WriteLine("Book added");
     }
 
-    public void BookIterator()
+    public void DeleteBook(Book book)
     {
-        if (_count > 0)
-        {
-            foreach (var book in _books.Values)
-            {
-                PrintBook(book);
-                Console.WriteLine("--------");
-            }
-        }
-        else
-            Console.WriteLine("No books found");
+        // Var olup olmadığına nasıl bakıcam
+        _bookRepository.Delete(book.Id);
     }
 
-    public void DeleteBook(string book)
+    public void SearchBook(Book book)
     {
-        string editedName = string.Join(" ", book.ToLower().Split(' ', StringSplitOptions.RemoveEmptyEntries));
-        
-        if (_books.ContainsKey(editedName))
-        {
-            _books.Remove(editedName);
-            _count--;
-            Console.WriteLine("Book deleted");
-        }
-        else
-        {
-            Console.WriteLine("Book not found");
-        }
+        // _bookRepository.Search(book);
     }
-
-    public void SearchBook(string book)
-    {   
-        string editedName = string.Join(" ", book.ToLower().Split(' ', StringSplitOptions.RemoveEmptyEntries));
-        
-        if (_books.ContainsKey(editedName))
-            PrintBook(_books[editedName]);
-        else
-        {
-            Console.WriteLine("Book not found");
-        }
+    
+    public List<Book> GetAll()
+    {
+        // Neden Liste kullanıyoruz zaten tüm veriler artık veri tabanında
+        return _bookRepository.GetAll();
     }
 }
