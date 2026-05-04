@@ -20,6 +20,7 @@ public class BookManager
         }
         else
         {
+            // Id farklı olabilir ama kitap ismi aynı olabilir bunu nasıl kontrol edicem
             Console.WriteLine("The book could not be added");
         }
     }

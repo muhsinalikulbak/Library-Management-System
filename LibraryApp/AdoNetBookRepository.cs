@@ -6,8 +6,7 @@ namespace LibraryApp;
 
 public class AdoNetBookRepository : IBookRepository
 {
-    readonly string _connectionString;
-    readonly List<Book> _books = new List<Book>();
+    private readonly string _connectionString;
 
     public AdoNetBookRepository(string connectionString)
     {
@@ -59,14 +58,21 @@ public class AdoNetBookRepository : IBookRepository
             SqlDataReader reader = cmd.ExecuteReader();
             if (reader.Read())
             {
-                foundBook = new Book((int)reader["Id"], reader["Title"].ToString());
-            }            
+                foundBook = new Book(reader["Title"].ToString());
+            }
         }
         return foundBook;
     }
     
     public List<Book> GetAll()
     {
-        return _books;
+        return default;
     }
 }
+
+// Kitapları isme ve yazara göre ekle
+// Silerken eşleşen kitapları listele ve seçime göre id al sil
+// Kitap silineceği zaman 
+// Normal aramalarda kitap ismi verince de kitap geliyor
+// Kitap ismi ve yazar verince de kitap geliyor,
+// Burada nasıl bir veri tabanı sorugus yapıyorlar.

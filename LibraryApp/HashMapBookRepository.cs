@@ -6,7 +6,7 @@ public class HashMapBookRepository : IBookRepository
     
     public void Add(Book book)
     {
-   
+    
     }     
     
     public void Delete(int id)
@@ -21,7 +21,9 @@ public class HashMapBookRepository : IBookRepository
     
     public Book GetById(int id)
     {
-        return default;
+        if (_books.TryGetValue(id, out Book book))
+            return book;
+        return null;
     }
     
     public List<Book> GetAll()
