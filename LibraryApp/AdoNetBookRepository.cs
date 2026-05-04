@@ -4,35 +4,13 @@ using Microsoft.Data.SqlClient;
 
 namespace LibraryApp;
 
-public class AdoNetBookRepository : IBookRepository
+public class AdoNetBookRepository(string connectionString) : IBookRepository
 {
-    private readonly string _connectionString;
-
-    public AdoNetBookRepository(string connectionString)
-    {
-        _connectionString = connectionString;
-    }
-    
+    private readonly string _connectionString = connectionString;
+    private readonly AuthorManager _authorManager = new AuthorManager(connectionString);
     public void Add(Book book)
     {
-        SqlConnection con = new SqlConnection(_connectionString);
-        try
-        {
-            SqlCommand cmd = new SqlCommand("insert into Books (Title) values (@title)", con);
-            // cmd.Parameters.AddWithValue("@id", book.Id);
-            cmd.Parameters.AddWithValue("@title", book.Name);
-            con.Open();
-            cmd.ExecuteNonQuery();
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.Message);
-        }
-        finally
-        {
-            if (con.State != ConnectionState.Closed)
-                con.Close();
-        }
+        
     }
     
     public void Delete(int id)
@@ -48,17 +26,20 @@ public class AdoNetBookRepository : IBookRepository
     public Book GetById(int id)
     {
         Book? foundBook = null;
+        Author? author = null;
+        
         using (SqlConnection con = new SqlConnection(_connectionString))
         {
             SqlCommand cmd = new SqlCommand("select * from Books where Id = @id", con);
-            // Burası SQL Injection'dan korunmak için, eğer strint + id dersek burada sıkıntı olurdu
             cmd.Parameters.AddWithValue("@id", id);
-            
             con.Open();
+            
             SqlDataReader reader = cmd.ExecuteReader();
             if (reader.Read())
             {
-                foundBook = new Book(reader["Title"].ToString());
+                author = _authorManager.GetById((int)reader["AuthorId"]);
+                foundBook = new Book(reader["Title"].ToString(), author);
+                foundBook.Id = id;
             }
         }
         return foundBook;
@@ -66,13 +47,24 @@ public class AdoNetBookRepository : IBookRepository
     
     public List<Book> GetAll()
     {
-        return default;
+        List<Book> bookList = new List<Book>();
+        Author? author = null;
+        Book? book = null;
+        
+        using (SqlConnection con = new SqlConnection(_connectionString))
+        {
+            SqlCommand cmd = new SqlCommand("select * from Books", con);
+            con.Open();
+            
+            SqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                author = _authorManager.GetById((int)reader["AuthorId"]);
+                book = new Book(reader["Title"].ToString(), author);
+                book.Id = (int)reader["Id"];
+                bookList.Add(book);
+            }
+        }
+        return bookList;
     }
 }
-
-// Kitapları isme ve yazara göre ekle
-// Silerken eşleşen kitapları listele ve seçime göre id al sil
-// Kitap silineceği zaman 
-// Normal aramalarda kitap ismi verince de kitap geliyor
-// Kitap ismi ve yazar verince de kitap geliyor,
-// Burada nasıl bir veri tabanı sorugus yapıyorlar.

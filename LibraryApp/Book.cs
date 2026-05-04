@@ -1,19 +1,16 @@
 namespace LibraryApp;
 
 public class Book
-{ 
-    private static int _counter = 0; 
-    public Book(string name)
+{
+    public string  Title { get; set; }
+    public int Id { get; set; }
+    public int AuthorId { get; set; }
+    public Author Author { get; set; }
+    
+    public Book(string title, Author author)
     {
-        _id = _counter++; 
-        name = string.Join(" ", name.ToLower().Split(' ', StringSplitOptions.RemoveEmptyEntries));
+        Title = string.Join(" ", title.ToLower().Split(' ', StringSplitOptions.RemoveEmptyEntries));
+        Author = author;
+        AuthorId =  author.Id;
     }
-
-    private string _name = "";
-    private string _author = "";
-    private int _id = 0;
-
-    public string Author { get => _author; set => _author = value; }
-    public string Name { get => _name; set => _name = value;}
-    public int Id { get => _id; set  => _id = value; }
 }

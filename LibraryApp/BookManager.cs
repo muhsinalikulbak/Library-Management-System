@@ -2,43 +2,31 @@ using System.Text;
 
 namespace LibraryApp;
 
-public class BookManager
+public class BookManager(IBookRepository bookRepository)
 {
-    IBookRepository _bookRepository;
-
-    public BookManager(IBookRepository bookRepository)
-    {
-        _bookRepository = bookRepository;
-    }
+    private readonly IBookRepository _bookRepository = bookRepository;
 
     public void AddBook(Book book)
     {
-        if (_bookRepository.GetById(book.Id) == null)
-        {
-            _bookRepository.Add(book);
-            Console.WriteLine("Book added");
-        }
-        else
-        {
-            // Id farklı olabilir ama kitap ismi aynı olabilir bunu nasıl kontrol edicem
-            Console.WriteLine("The book could not be added");
-        }
+        
+        // Önce yazarı var mı diye kontrol et
+        // Yazarı yoksa önce yazarı sonra kitabı ekle
+        // yazarı varsa, yazarı çek
+        // Kitabı eklerken yazarının id'sini eklemeyi unutma
     }
 
     public void DeleteBook(Book book)
     {
-        // Var olup olmadığına nasıl bakıcam
-        _bookRepository.Delete(book.Id);
+        // Kitap ismine ve yazarına göre and olarak arat
+        // Varsa sil 
     }
 
     public void SearchBook(Book book)
     {
-        // _bookRepository.Search(book);
     }
     
     public List<Book> GetAll()
     {
-        // Neden Liste kullanıyoruz zaten tüm veriler artık veri tabanında
         return _bookRepository.GetAll();
     }
 }
