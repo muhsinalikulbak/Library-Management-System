@@ -12,6 +12,16 @@ public class AuthorManager (string connectionString)
         if (GeyByName(name) != null)
         {
             Console.WriteLine($"{name} already exists");
+            return;
+        }
+
+        using (SqlConnection con = new SqlConnection(_connectionString))
+        {
+            SqlCommand cmd = new SqlCommand("insert into Authors (AuthorName) values (@name)", con);
+            cmd.Parameters.AddWithValue("@name", name);
+            con.Open();
+            cmd.ExecuteNonQuery();
+            Console.WriteLine("Successfully added author");
         }
     }
 
