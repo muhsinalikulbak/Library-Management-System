@@ -7,14 +7,30 @@ public class AuthorManager (string connectionString)
 {
     private readonly string _connectionString = connectionString;
     
-    public bool AddAuthor(string name)
+    public void AddAuthor(string name)
     {
-        return true;
+        if (GeyByName(name) != null)
+        {
+            Console.WriteLine($"{name} already exists");
+        }
     }
 
-    public  bool DeleteAuthor(string name)
+    public  void DeleteAuthor(string name)
     {
-        return true;
+        Author? author = GeyByName(name);
+        if (author is not null)
+        {
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("delete from Authors where Name = @name", con);
+                cmd.Parameters.AddWithValue("@name", name);
+                con.Open();
+                cmd.ExecuteNonQuery();
+                Console.WriteLine("Successfully deleted author");
+            }
+        }
+        else
+            Console.WriteLine($"{name} not found");
     }
 
     public Author? GeyByName(string name)
