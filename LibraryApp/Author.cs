@@ -8,7 +8,7 @@ public class Author
 
     public Author(string name)
     {
-        Name = name;
+        Name = string.Join(" ", name.Split(' ', StringSplitOptions.RemoveEmptyEntries));
         Books = null;
     }
 }

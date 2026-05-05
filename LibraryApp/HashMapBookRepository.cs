@@ -30,4 +30,9 @@ public class HashMapBookRepository : IBookRepository
     {
         return default;
     }
+
+    public bool BookExists(string name, int authorId)
+    {
+        return default;
+    }
 }

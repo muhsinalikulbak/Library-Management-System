@@ -9,7 +9,7 @@ public class Book
     
     public Book(string title, Author author)
     {
-        Title = string.Join(" ", title.ToLower().Split(' ', StringSplitOptions.RemoveEmptyEntries));
+        Title = string.Join(" ", title.Split(' ', StringSplitOptions.RemoveEmptyEntries));
         Author = author;
         AuthorId =  author.Id;
     }
